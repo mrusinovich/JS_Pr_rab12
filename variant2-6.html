@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset=utf-8" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+	#myDIV {
+		border: 4px solid blue;
+		width: 500px;
+		text-align: center;
+	  }
+	ul {
+		text-align: left;
+		padding-left: 140px;
+    }
+	li {
+		margin: 10px;
+		text-decoration: none;
+    }
+	#myInput {
+	margin-bottom: 20px;
+	margin-top: 5px;
+	margin-right: 10px;
+	padding: 5px;
+	}
+	h2 {
+	color: blue;
+	}
+	p {
+	color: blue;
+	margin-top: 0;
+	font-size: 14px;
+	}
+	.addBtn {
+	  width: 10%;
+	  padding: 5px;
+	  background: #3333ff;
+	  color: white;
+	  text-align: center;
+	  font-size: 16px;
+	  cursor: pointer;
+	  transition: 0.3s;
+	  border-radius: 5px;
+	}
+	.addBtn:hover {
+		  background-color: #6666ff;
+	}
+	/* Style the close button */
+	.close {
+	  padding: 1px;
+	  margin-left: 1px;
+	  margin-right: 10px;
+	 }
+
+	.close:hover {
+	  background-color: #3333ff;
+	  color: white;
+	}
+	/* Style the flag button */
+	.flag {
+	  padding: 1px;
+	  margin-left: 1px;
+	  margin-right:1px;
+
+	}
+
+	.flag:hover {
+	  background-color: #3333ff;
+	  color: white;
+	}
+</style>
+<script>
+
+</script>
+</head>
+<body>
+  <p>Tip1: Click ⛳ if your item is done & you want to cross it!</p>
+  <p>Tip2: Click ❌ if you want to delete an item!</p>
+  <p>Tip3: Click twice per item if you want to change it! Click "Enter" to save or "Escape" to reject changes!</p>
+  <p>Tip4: Fill in an input with new item to do and click "Add" button to join it to your list!</p>
+  <p>Have a good day:)</p>
+<div id="myDIV" class="header">
+  <h2>My To Do List</h2>
+  <ul id="myUL">
+  </ul>
+  <input type="text" id="myInput" placeholder="New item to add...">
+  <span onclick="newElement()" class="addBtn">Add</span>
+  
+</div>
+
+<script>
+var nextItemId=0;  // next todo item id
+var currentItemEdit="";
+var currentItemValue="";
+var fadeDuration = 500; //ms
+
+var ToDoList = ["Learn HTML", "Learn CSS", "Learn JavaScript"];
+for (i = 0; i < ToDoList.length; i++) {
+	newTodoItem(ToDoList[i])
+}
+
+function makeToDoItemId() {
+	return "ToDoItem_" + nextItemId++;
+}
+
+function createToDoText(ToDoText) {
+		var span = document.createElement("SPAN");
+		var txt = document.createTextNode(ToDoText);
+		span.appendChild(txt);
+
+		span.ondblclick =  function () {
+            var thisData = this.innerHTML,
+            $el = $('<input type="text" class="in-edit-text" onkeyup="myEditFunction(event)"/>');
+			currentItemEdit = this.id;
+			currentItemValue = this.innerText;
+
+			$(this).fadeToggle(fadeDuration, "linear", function(){
+				$(this).replaceWith($el);
+				$el.val(thisData).focus();
+			});
+		};
+		return span;
+}
+
+function fadeOutEditor(span) {
+	return new Promise(function(resolve, reject) {
+		$('.in-edit-text').fadeToggle(fadeDuration, "linear", ()=>{resolve(span)});
+	})
+}
+function myEditFunction(event){
+	var x = event.key;
+	var span=null;
+	if (x ==  "Enter") {
+		var txt = $('.in-edit-text').val();
+		if(txt == "") // restore old value if new is empty
+			span = createToDoText(currentItemValue);
+		else
+		span = createToDoText(txt);
+	}
+	else if (x == "Escape") {
+		span = createToDoText(currentItemValue);
+	}
+
+	if(span)
+	{
+		fadeOutEditor(span).then(
+			span => $('.in-edit-text').replaceWith(span)
+			);
+	}
+}
+
+function newTodoItem(todoText) {
+  if (todoText === '') {
+    alert("TODO item should have text!");
+	return;
+  }
+  var li = document.createElement("li");
+
+
+  var span;
+    // create done node
+  span = document.createElement("SPAN");
+  txt = document.createTextNode("⛳");
+  span.className = "flag";
+
+  span.onclick = function() {
+    var div = this.parentElement;
+	var txt = div.children[2];
+	if(txt.style.textDecoration == "line-through")
+	{
+		txt.style.textDecoration = "";
+		txt.style.color = "black";
+	}
+	else
+	{
+		txt.style.textDecoration = "line-through";
+		txt.style.color = "lightgrey";
+	}
+  };
+  span.appendChild(txt);
+  li.appendChild(span);
+
+
+  // create delete node
+  span = document.createElement("SPAN");
+  txt = document.createTextNode("❌");
+  span.className = "close";
+  span.appendChild(txt);
+  span.onclick = function() {
+      var div = this.parentElement;
+      div.style.display = "none";
+  }
+  li.appendChild(span);
+
+   // create text node
+   span = createToDoText(todoText, li);
+  li.appendChild(span);
+
+  document.getElementById("myUL").appendChild(li);
+}
+
+function newElement() {
+ var edit = document.getElementById("myInput");
+ var inputValue = edit.value;
+  if (inputValue === '') {
+    alert("You must write something!");
+	return;
+  }
+  newTodoItem(inputValue);
+  edit.value="";
+}
+
+</script>
+
+</body>
+</html>
+

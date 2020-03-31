@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+<head>
+	<title>jQuery фильтры</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+	 </script>
+	<style>
+		table {
+		  width:400px;
+		  border: 1px solid black ;
+		}
+		td{border: 1px solid black ;}
+	</style>
+	<script>
+		$(function(){
+			$('td:gt(3)').css('background-color','#FFC0CB');
+			$('td:lt(3)').css('background-color','#FFC0CB');
+		});
+	</script>
+</head>
+<body>
+	<table>
+	  <tr>
+		<td>№ п/п</td><td>ФИО студента</td><td>Количество пропусков</td><td>Отметка о зачете</td>
+	  </tr>
+	  <tr>
+		<td>1</td><td>Гроздицкая Виктория Владимировна</td><td>16</td><td>-</td>
+	  </tr>
+	  <tr>
+		<td>2</td><td>Дятлова Татьяна Валерьевна</td><td>18</td><td>-</td>
+	  </tr>
+	  <tr>
+		<td>3</td><td>Каленик Ирина Андреевна</td><td>26</td><td>-</td>
+	  </tr>
+	</table>
+</body>
+</html>
